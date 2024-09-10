@@ -1,5 +1,5 @@
 const express = require('express');
-const { sendMessage, getGroupMessages, getOneToOneMessages, markMessagesAsRead, getUnreadMessages } = require('../controllers/messageControllers');
+const { sendMessage, getGroupMessages, getOneToOneMessages, markMessagesAsRead, getUnreadMessages ,getAllMessages} = require('../controllers/messageControllers');
 const { protect } = require('../middlewares/authMiddleware');
 const attachSocket = require('../middlewares/socketioMiddleware');
 const initSocketIo = require('../config/socketIoConfig');
@@ -15,6 +15,8 @@ router.get('/group/:chatRoomId', protect, getGroupMessages);
 router.get('/oneToOne/:receiverId', protect, getOneToOneMessages);
 router.post('/markMsgRead', protect, markMessagesAsRead);
 router.get('/unread', protect, getUnreadMessages);
+router.get('/getAll', protect, getAllMessages);
+
 
 
 

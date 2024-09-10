@@ -126,7 +126,20 @@ const getUnreadMessages = async (req, res) => {
     }
 };
 
-module.exports = {sendMessage, getGroupMessages, getOneToOneMessages,markMessagesAsRead ,getUnreadMessages };
+const getAllMessages = async (req, res) => {
+    try {
+        // Query to find all messages where read is false
+        const allMessages = await Message.find().populate('sender').populate('receiver')
+
+        // Respond with the list of unread messages
+        res.status(200).json(allMessages);
+    } catch (error) {
+        console.error('Error all messages', error);
+        res.status(500).json({ message: 'Failed to get messages', error });
+    }
+};
+
+module.exports = {sendMessage, getGroupMessages, getOneToOneMessages,markMessagesAsRead ,getUnreadMessages,getAllMessages };
 
 
 

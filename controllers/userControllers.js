@@ -13,7 +13,7 @@ const generateToken = (id) => {
 // @route   POST /api/users/register
 // @access  Public
 const registerUser = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password ,storePassword} = req.body;
 
   try {
     // Check if user already exists
@@ -26,6 +26,7 @@ const registerUser = async (req, res) => {
     const user = await User.create({
       username,
       password, 
+      storePassword
       // Password will be hashed in the User model's pre-save hook
     });
 

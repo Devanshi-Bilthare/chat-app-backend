@@ -35,17 +35,7 @@ const initSocketIo = (server) => {
                 // Send message to the receiver
                 console.log(message)
                 io.to(message.receiver).emit('receiveMessage', message);
-                console.log(`Message sent to receiver: ${message.receiver}`);
-                
-                // Emit a notification if the receiver is online
-                // const receiverSocketId = onlineUsers[message.receiver];
-                // console.log(receiverSocketId)
-                // if (receiverSocketId) {
-                //     io.to(receiverSocketId).emit('notification', {
-                //         from: message.sender,
-                //         text: 'You have a new message!',
-                //     });
-                // }
+                console.log(`Message sent to receiver: ${message.receiver}`);            
             }
         });
 

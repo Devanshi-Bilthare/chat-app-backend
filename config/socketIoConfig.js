@@ -18,6 +18,7 @@ const initSocketIo = (server) => {
         socket.on('setUserId', (userId) => {
             onlineUsers[userId] = socket.id;
             console.log(`User ID ${userId} connected with socket ID ${socket.id}`);
+            console.log(onlineUsers)
         });
 
         // Join a room
@@ -33,9 +34,16 @@ const initSocketIo = (server) => {
                 io.to(message.room).emit('receiveMessage', message);
             } else {
                 // Send message to the receiver
-                console.log(message)
-                io.to(message.receiver).emit('receiveMessage', message);
-                console.log(`Message sent to receiver: ${message.receiver}`);            
+                const receiverSocketId = onlineUsers[message.receiver];
+                if (receiverSocketId) {
+                    io.to(receiverSocketId).emit('receiveMessage', message);
+                    console.log(`Message sent to receiver: ${message.receiver}`);
+                } else {
+                    console.log(`User ${message.receiver} is not online`);
+                }
+
+                console.log(onlineUsers)
+                   
             }
         });
 

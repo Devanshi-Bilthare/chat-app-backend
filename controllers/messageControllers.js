@@ -89,29 +89,30 @@ const getOneToOneMessages = async (req, res) => {
 
 const markMessagesAsRead = async (req, res) => {
     try {
-        const { senderId,chatType } = req.body; // Sender ID to mark all messages as read
-        console.log("senderId" , senderId)
-        // Update messages to set `read` to true where sender matches and receiver is the current user
-       if(chatType == 'one'){
-        var msg = await Message.updateMany(
-            { sender: senderId, receiver: req.user.id },
-            { $set: { read: true } }
-        )
-       } else if (chatType === 'group') {
-        // Group chat: update all unread messages in the group
-        msg = await Message.updateMany(
-            { chatRoom: senderId }, // Assuming receiver is the group ID
-            { $set: { read: true } }
-        );
-    }
+        const { senderId, chatType } = req.body; // Sender ID to mark all messages as read
+        console.log("senderId", senderId);
 
+        let msg;
+
+        if (chatType === 'one') {
+            // One-on-one chat: mark messages as read
+            msg = await Message.updateMany(
+                { sender: senderId, receiver: req.user.id },
+                { $set: { read: true } }
+            );
+        } else if (chatType === 'group') {
+            // Group chat: add current user to the readBy array
+            msg = await Message.updateMany(
+                { chatRoom: senderId, readBy: { $ne: req.user.id } }, // Avoid adding user ID multiple times
+                { $addToSet: { readBy: req.user.id } } // Add the user to readBy array without duplicates
+            );
+        }
 
         res.status(200).json({ msg });
     } catch (error) {
         res.status(500).json({ message: 'Failed to mark messages as read', error });
     }
 };
-
 
 const getUnreadMessages = async (req, res) => {
     try {

@@ -36,6 +36,10 @@ const messageSchema = new mongoose.Schema({
     type: Boolean, 
     default: false 
   },
+  readBy:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'User'
+  }]
 });
 
 module.exports = mongoose.model('Message', messageSchema);
